@@ -1,0 +1,31 @@
+# configuration managment
+
+# The yaml file is a structured way to store settings. Like a dictionary but in a file. Uses indentation to show nesting
+
+# What does the config holds?
+# 1. file paths, 2. Model settings, 3. Traiing parameters
+
+data:
+    raw_data_path: "data/credit_risk_dataset.csv"
+    test_size: 0.2
+    random_state: 42
+
+model: 
+    type: "random_forest"
+    n_estimators: 100
+    max_depth: 5
+    random_state: 42
+    class_weight: "balanced"
+
+artifacts: 
+    model_path: "artifacts/models/model.pkl"
+    scaler_path: "artifacts/models/scaler.pkl"
+    features_path: "artifacts/models/features.json"
+    metrics_path: "artifacts/metrics/metrics.json"
+    logs_path: "artifacts/logs/training.log"
+
+target_column: "loan_status"
+
+# scaler_path: "artifacts/models/scaler.pkl"
+
+
