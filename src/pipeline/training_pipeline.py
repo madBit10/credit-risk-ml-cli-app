@@ -18,6 +18,7 @@ from src.models.train import train
 from src.models.evaluate import evaluate
 from src.utils.save_artifacts import save_artifacts
 from src.utils.logger import get_logger
+from src.models.cross_validation import run_cross_validation, print_cv_results
 
 logger = get_logger(__name__)
 
@@ -44,7 +45,13 @@ def run_training_pipeline():
 
     X,y,scaler = preprocess(df, config["target_column"])
 
-    # Step 4 - Train
+    # step 4 - cross validation
+
+    logger.info("Running Cross validation")
+    cv_results = run_cross_validation(X,y)
+    print_cv_results(cv_results)
+
+    # Step 5 - Train
 
     model, X_test, y_test = train(X,y, {
         "test_size": config["data"]["test_size"],
@@ -54,11 +61,11 @@ def run_training_pipeline():
         "class_weight": config["model"]["class_weight"]
     })
 
-    # step 5 - Evaluate 
+    # step 6 - Evaluate 
 
     metrics = evaluate(model, X_test, y_test)
 
-    # step 6 - Save artifacts
+    # step 7 - Save artifacts
 
     save_artifacts(model, scaler,X.columns.to_list(), metrics, {
         "model_path": config["artifacts"]["model_path"],
