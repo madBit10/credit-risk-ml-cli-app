@@ -11,7 +11,7 @@ def tune_forest(X,y):
     param_grid = {
         "n_estimators": [50,100,200],
         "max_depth": [3,5,7],
-        "min_sample": [2,5,10]
+        "min_samples_split": [2,5,10]
     }
 
     model = RandomForestClassifier(class_weight="balanced", random_state=42)

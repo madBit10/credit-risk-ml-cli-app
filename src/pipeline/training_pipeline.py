@@ -19,6 +19,7 @@ from src.models.evaluate import evaluate
 from src.utils.save_artifacts import save_artifacts
 from src.utils.logger import get_logger
 from src.models.cross_validation import run_cross_validation, print_cv_results
+from src.models.tune import tune_forest
 
 logger = get_logger(__name__)
 
@@ -51,13 +52,20 @@ def run_training_pipeline():
     cv_results = run_cross_validation(X,y)
     print_cv_results(cv_results)
 
+    # step 5 - Hyperparameter Tuning 
+
+    logger.info("Running hyperparameter tuning...")
+    best_model, best_params, best_score = tune_forest(X,y)
+    logger.info(f"Best model ready. Recall: {best_score:.4f}, Params: {best_params}")
+
     # Step 5 - Train
 
     model, X_test, y_test = train(X,y, {
         "test_size": config["data"]["test_size"],
         "random_state": config["data"]["random_state"],
-        "n_estimators": config["model"]["n_estimators"],
-        "max_depth": config["model"]["max_depth"],
+        "n_estimators": best_params["max_depth"],
+        "max_depth": best_params["max_depth"],
+        "min_samples_split": best_params["min_samples_split"],
         "class_weight": config["model"]["class_weight"]
     })
 

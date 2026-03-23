@@ -36,6 +36,7 @@ def train(X,y,config:dict):
     model = RandomForestClassifier(
         n_estimators=config["n_estimators"],
         max_depth=config["max_depth"],
+        min_samples_split=config["min_samples_split"],
         random_state=config["random_state"],
         class_weight=config["class_weight"]
     )
