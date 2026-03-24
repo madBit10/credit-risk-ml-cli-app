@@ -4,13 +4,13 @@ from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-def save_artifacts(model, scaler, features, metrics: dict, config: dict):
+def save_artifacts(model, features, metrics: dict, config: dict):
     """
     
     Saves trained model and metrics to disk
 
     Args: 
-        model: Trained Randome Forest model
+        pipeline: Trained sklearn pipeline
         metrics: Dictionary of evaluation metrics
         config: Artifacts path from config.yaml
 
@@ -25,10 +25,10 @@ def save_artifacts(model, scaler, features, metrics: dict, config: dict):
 
     # save scaler
 
-    scaler_path = config["scaler_path"]
-    with open(scaler_path, "wb") as f:
-        pickle.dump(scaler, f)
-    logger.info(f"Scaler saved at {scaler_path}")
+    # scaler_path = config["scaler_path"]
+    # with open(scaler_path, "wb") as f:
+    #     pickle.dump(scaler, f)
+    # logger.info(f"Scaler saved at {scaler_path}")
 
     # Save feature columns                                                                                                                                                                                   
     features_path = config["features_path"]                                                                                                                                                                

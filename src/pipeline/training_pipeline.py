@@ -14,12 +14,14 @@ step5 - save_artifacts.py "Save the model and results"
 import yaml
 from src.data.load_data import load_data
 from src.data.preprocess import preprocess
-from src.models.train import train
+# from src.models.train import train
 from src.models.evaluate import evaluate
 from src.utils.save_artifacts import save_artifacts
 from src.utils.logger import get_logger
 from src.models.cross_validation import run_cross_validation, print_cv_results
 from src.models.tune import tune_forest
+from sklearn.model_selection import train_test_split
+from src.models.pipeline import build_and_train_pipeline
 
 logger = get_logger(__name__)
 
@@ -44,7 +46,16 @@ def run_training_pipeline():
 
     # step 3 - Preprocess
 
-    X,y,scaler = preprocess(df, config["target_column"])
+    X,y = preprocess(df, config["target_column"])
+
+    # split into train and test
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,y,
+        test_size=config["data"]["test_size"],
+        random_state=config["data"]["random_state"]
+    )
+    logger.info(f"Train size: {X_train.shape}, Test size: {X_test.shape}")
 
     # step 4 - cross validation
 
@@ -60,24 +71,24 @@ def run_training_pipeline():
 
     # Step 5 - Train
 
-    model, X_test, y_test = train(X,y, {
-        "test_size": config["data"]["test_size"],
-        "random_state": config["data"]["random_state"],
-        "n_estimators": best_params["max_depth"],
+    pipeline = build_and_train_pipeline(X_train,y_train, {
+        # "test_size": config["data"]["test_size"],
+        "n_estimators": best_params["n_estimators"],
         "max_depth": best_params["max_depth"],
         "min_samples_split": best_params["min_samples_split"],
+        "random_state": config["data"]["random_state"],
         "class_weight": config["model"]["class_weight"]
     })
 
     # step 6 - Evaluate 
 
-    metrics = evaluate(model, X_test, y_test)
+    metrics = evaluate(pipeline, X_test, y_test)
 
     # step 7 - Save artifacts
 
-    save_artifacts(model, scaler,X.columns.to_list(), metrics, {
+    save_artifacts(pipeline,X.columns.to_list(), metrics, {
         "model_path": config["artifacts"]["model_path"],
-        "scaler_path": config["artifacts"]["scaler_path"],
+        # "scaler_path": config["artifacts"]["scaler_path"],
         "features_path": config["artifacts"]["features_path"],
         "metrics_path": config["artifacts"]["metrics_path"]
     })
