@@ -1,7 +1,7 @@
 # Data processing layer
 
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.preprocessing import LabelEncoder
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -77,15 +77,15 @@ def preprocess(df: pd.DataFrame, target_column: str):
     X = df.drop(target_column, axis=1)
     y = df[target_column]
 
-    # step 8 - scale numeric values 
+    # # step 8 - scale numeric values 
 
-    numeric_cols = ["person_age", "person_income", "person_emp_length", "loan_amnt", "loan_int_rate", "loan_percent_income", "cb_person_cred_hist_length"]
+    # numeric_cols = ["person_age", "person_income", "person_emp_length", "loan_amnt", "loan_int_rate", "loan_percent_income", "cb_person_cred_hist_length"]
 
-    scaler = StandardScaler()
-    X[numeric_cols] = scaler.fit_transform(X[numeric_cols])
-    logger.info("Features scaling complete")
+    # scaler = StandardScaler()
+    # X[numeric_cols] = scaler.fit_transform(X[numeric_cols])
+    # logger.info("Features scaling complete")
 
     logger.info(f"Preprocessing complete. X shape: {X.shape}, y shape: {y.shape}")
 
-    return X,y, scaler
+    return X,y
 
