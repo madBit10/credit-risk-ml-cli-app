@@ -6,7 +6,7 @@ from src.models.evaluate import evaluate
 
 def test_train():
     df = load_data("data/credit_risk_dataset.csv")
-    X,y, scaler = preprocess(df, "loan_status")
+    X,y = preprocess(df, "loan_status")
 
     config = {
         "test_size": 0.2,                                                            
@@ -26,7 +26,7 @@ def test_train():
 
 def test_evaluate():
     df = load_data("data/credit_risk_dataset.csv")
-    X,y, scaler = preprocess(df, "loan_status")
+    X,y = preprocess(df, "loan_status")
 
     config = {
         "test_size": 0.2,                                                            

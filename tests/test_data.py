@@ -19,7 +19,7 @@ def test_loaf_data():
 
 def test_preprocess():
     df = load_data("data/credit_risk_dataset.csv")
-    X,y, scaler = preprocess(df, "loan_status")
+    X,y = preprocess(df, "loan_status")
 
     # check shapes
     assert X.shape[0] == y.shape[0]
