@@ -71,7 +71,7 @@ def run_training_pipeline():
 
     # Step 5 - Train
 
-    pipeline = build_and_train_pipeline(X_train,y_train, {
+    pipeline = build_and_train_pipeline("rf", X_train,y_train, {
         # "test_size": config["data"]["test_size"],
         "n_estimators": best_params["n_estimators"],
         "max_depth": best_params["max_depth"],
@@ -80,13 +80,43 @@ def run_training_pipeline():
         "class_weight": config["model"]["class_weight"]
     })
 
+    # step 5' - Train SVM model
+
+    svm_pipeline = build_and_train_pipeline("svm", X_train, y_train, {
+        "kernel": config["svm"]["kernel"],
+        "class_weight": config["svm"]["class_weight"],
+        "random_state": config["svm"]["random_state"],
+        "probability": config["svm"]["probability"]
+    })
+
     # step 6 - Evaluate 
 
-    metrics = evaluate(pipeline, X_test, y_test)
+    rf_metrics = evaluate(pipeline, X_test, y_test)
+
+    # step 6' - evaluate svm 
+
+    svm_metrics = evaluate(svm_pipeline, X_test, y_test)
+
+    # comparing 2 models
+
+    # Compare and pick best model
+    if rf_metrics['classification_report']['1']['recall'] > svm_metrics['classification_report']['1']['recall']:                                                                                                                     
+        best_pipeline = pipeline                                                                                                                                   
+        best_metrics = rf_metrics
+        logger.info("Best model: RF")                                                                                                                              
+    else:                                                                                                                                                          
+        best_pipeline = svm_pipeline
+        best_metrics = svm_metrics                                                                                                                                 
+        logger.info("Best model: SVM")
+
+    # comparison
+    print("\n--- Model Comparison ---")
+    print(f"RF  → Accuracy: {rf_metrics['accuracy']:.4f} | Recall: {rf_metrics['classification_report']['1']['recall']:.4f} | Precision: {rf_metrics['classification_report']['1']['precision']:.4f}")
+    print(f"SVM → Accuracy: {svm_metrics['accuracy']:.4f} | Recall: {svm_metrics['classification_report']['1']['recall']:.4f} | Precision: {svm_metrics['classification_report']['1']['precision']:.4f}")
 
     # step 7 - Save artifacts
 
-    save_artifacts(pipeline,X.columns.to_list(), metrics, {
+    save_artifacts(best_pipeline,X.columns.to_list(), best_metrics, {
         "model_path": config["artifacts"]["model_path"],
         # "scaler_path": config["artifacts"]["scaler_path"],
         "features_path": config["artifacts"]["features_path"],

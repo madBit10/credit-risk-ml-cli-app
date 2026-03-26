@@ -17,6 +17,12 @@ model:
     random_state: 42
     class_weight: "balanced"
 
+svm:
+    kernel: "rbf"
+    class_weight: "balanced"
+    random_state: 42
+    probability: true
+
 artifacts: 
     model_path: "artifacts/models/model.pkl"
     scaler_path: "artifacts/models/scaler.pkl"
