@@ -4,7 +4,7 @@ import pandas as pd
 from src.data.load_data import load_data
 from src.data.preprocess import preprocess
 
-def test_loaf_data():
+def test_load_data():
     df = load_data("data/credit_risk_dataset.csv")
 
     # check it returns a DataFrame
