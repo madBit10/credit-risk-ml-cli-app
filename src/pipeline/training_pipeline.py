@@ -66,27 +66,27 @@ def run_training_pipeline():
     # step 5 - Hyperparameter Tuning 
 
     logger.info("Running hyperparameter tuning...")
-    best_model, best_params, best_score = tune_forest(X,y)
-    logger.info(f"Best model ready. Recall: {best_score:.4f}, Params: {best_params}")
+    best_model_forest, best_params_forest, best_score_forest = tune_forest(X,y)
+    logger.info(f"Best model Random Forest ready. Recall: {best_score_forest:.4f}, Params: {best_params_forest}")
 
     # Step 5 - Train
 
     pipeline = build_and_train_pipeline(X_train,y_train, {
         # "test_size": config["data"]["test_size"],
-        "n_estimators": best_params["n_estimators"],
-        "max_depth": best_params["max_depth"],
-        "min_samples_split": best_params["min_samples_split"],
+        "n_estimators": best_params_forest["n_estimators"],
+        "max_depth": best_params_forest["max_depth"],
+        "min_samples_split": best_params_forest["min_samples_split"],
         "random_state": config["data"]["random_state"],
         "class_weight": config["model"]["class_weight"]
     })
 
     # step 6 - Evaluate 
 
-    metrics = evaluate(pipeline, X_test, y_test)
+    rf_metrics = evaluate(pipeline, X_test, y_test)
 
     # step 7 - Save artifacts
 
-    save_artifacts(pipeline,X.columns.to_list(), metrics, {
+    save_artifacts(pipeline,X.columns.to_list(), rf_metrics, {
         "model_path": config["artifacts"]["model_path"],
         # "scaler_path": config["artifacts"]["scaler_path"],
         "features_path": config["artifacts"]["features_path"],
