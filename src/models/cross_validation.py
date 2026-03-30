@@ -2,6 +2,7 @@ import numpy as np
 from sklearn.model_selection import cross_val_score, StratifiedKFold
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 from xgboost import XGBClassifier
 from src.utils.logger import get_logger
 
@@ -13,7 +14,8 @@ def run_cross_validation(X,y):
     models = {
         "Logistic Regression": LogisticRegression(max_iter=1000, class_weight="balanced", random_state=42),
         "Random Forest": RandomForestClassifier(n_estimators=100, max_depth=5, class_weight="balanced", random_state=42),
-        "XGBoost": XGBClassifier(n_estimators=100, max_depth=5, learning_rate=0.1, scale_pos_weight=3, random_state=42, eval_metrics="logloss")
+        "XGBoost": XGBClassifier(n_estimators=100, max_depth=5, learning_rate=0.1, scale_pos_weight=3, random_state=42, eval_metrics="logloss"),
+        # "SVM": SVC(kernel="linear", C=0.1, gamma="scale", class_weight="balanced", probability=True)
     }
 
     results = {}

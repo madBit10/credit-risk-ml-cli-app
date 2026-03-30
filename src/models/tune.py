@@ -1,5 +1,6 @@
 import numpy as np 
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 from src.utils.logger import get_logger
 

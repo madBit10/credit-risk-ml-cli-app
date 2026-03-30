@@ -19,8 +19,9 @@ model:
 
 svm:
     kernel: "rbf"
+    C: 1
+    gamma: "scale"
     class_weight: "balanced"
-    random_state: 42
     probability: true
 
 artifacts: 
