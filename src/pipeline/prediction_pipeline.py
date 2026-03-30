@@ -29,9 +29,9 @@ def run_prediction_pipeline(input_path: str):
     logger.info("Model loaded")
 
     # step 3 - Load Scaler 
-    with open(config["artifacts"]["scaler_path"], "rb") as f:
-        scaler = pickle.load(f)
-    logger.info("Scaler loaded")
+    # with open(config["artifacts"]["scaler_path"], "rb") as f:
+    #     scaler = pickle.load(f)
+    # logger.info("Scaler loaded")
 
     # Step 4 - Load input data 
     df = pd.read_csv(input_path)
@@ -44,7 +44,7 @@ def run_prediction_pipeline(input_path: str):
     logger.info("Feature columns loaded")
 
     # step 5 - preprocess input
-    df = preprocess_input(df, scaler, feature_columns)
+    df = preprocess_input(df, feature_columns)
 
     # step 6 - predict
 
@@ -66,7 +66,7 @@ def run_prediction_pipeline(input_path: str):
     return predictions, probablities
 
 
-def preprocess_input(df: pd.DataFrame, scaler, feature_columns: list) -> pd.DataFrame:
+def preprocess_input(df: pd.DataFrame, feature_columns: list) -> pd.DataFrame:
     """
     Applies same preprocessing as traning but uses the saved scaler
     """
@@ -100,12 +100,12 @@ def preprocess_input(df: pd.DataFrame, scaler, feature_columns: list) -> pd.Data
 
     df = df[feature_columns]
 
-    # Scale using saved scaler — transform only, NOT fit_transform
-    # Scale using saved scaler                                                                                                                                                                             
-    numeric_cols = ["person_age", "person_income", "person_emp_length",
-                      "loan_amnt", "loan_int_rate", "loan_percent_income",                                                                                                                                     
-                      "cb_person_cred_hist_length"]                                                                                                                                                            
-    df[numeric_cols] = scaler.transform(df[numeric_cols])
+    # # Scale using saved scaler — transform only, NOT fit_transform
+    # # Scale using saved scaler                                                                                                                                                                             
+    # numeric_cols = ["person_age", "person_income", "person_emp_length",
+    #                   "loan_amnt", "loan_int_rate", "loan_percent_income",                                                                                                                                     
+    #                   "cb_person_cred_hist_length"]                                                                                                                                                            
+    # # df[numeric_cols] = scaler.transform(df[numeric_cols])
 
 
     return df
